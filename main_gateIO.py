@@ -35,7 +35,6 @@ import threading
 
 
 from gateAPI import GateIO
-sss
 
 # 填写 APIKEY APISECRET
 apikey = ''
