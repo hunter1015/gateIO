@@ -658,7 +658,7 @@ def xielv(madata):
 
 
 def sell(price,volume,orders,coin_name):
-    moneySell=0
+    money_sell=0
     money_chengben=0
     money_profit=0
     money_my=my_price[coin_name.upper()]
@@ -774,8 +774,8 @@ def action_go(coin_name):
     ma_5=tp2
     ma_12=tp3
     ma_26=tp4
-    ma5_xielv, ma_5_max = xielv(ma_5[-3:])
-    ma12_xielv, ma_12_max = xielv(ma_12[-3:])
+    ma5_xielv, ma_5_max,ma_5_min = xielv(ma_5[-3:])
+    ma12_xielv, ma_12_max ,ma_12_min= xielv(ma_12[-3:])
 
     #datalast,ma_5,ma_12,ma_26=write2file_5min_24hour(coin_name,0,datalast,ma_5,ma_12,ma_26)
     
@@ -784,7 +784,9 @@ def action_go(coin_name):
     my_price[coin_name.upper()]=0
     chengbenPrice=0
     for x in orders['bids'][0:3]:
-        chengbenPrice=chengbenPrice+float(x[0])
+        #print(x)
+        #chengbenPrice=chengbenPrice+float(x.split(',')[0])
+        chengbenPrice=chengbenPrice+x[0]
     my_price[coin_name.upper()]=(chengbenPrice/3)*0.7
     #print(coin_name,'成本价初始化为',my_price[coin_name.upper()])
     #float(orders_btc_usdt['bids'][0:3][0])#+orders_btc_usdt['bids'][-3][0]+orders_btc_usdt['bids'][-3][0])
@@ -855,10 +857,10 @@ def action_go(coin_name):
         loopNumber=loopNumber+1
         #if loopFlag>20:
             
-        if loopFlag>100:
+        if loopFlag>400:
             loopFlag=0
             #print('买1=',orders_btc_usdt['bids'][0],' 上次买1=',orders_btc_usdt_last['bids'][0],' 当前库存=',float(my_account['available'][coin_name.upper()]))
-            #print(coin_name,'请求',loopNumber,'次,','成交',dealNumber,'次,当前库存=',float(my_account['available'][coin_name.upper()]))
+            print(coin_name,'请求',loopNumber,'次, 当前库存=',float(my_account['available'][coin_name.upper()]))
             #print(coin_name,'当前买1=',orders['bids'][0],' 上次买1=',orders_last['bids'][0])
         if(orders=='异常'):
             #print(coin_name,"异常处理")
@@ -870,64 +872,10 @@ def action_go(coin_name):
             #time.sleep(0.6+random.random())
             continue
         orders_last=orders
-        #print(orders_btc_usdt['asks'][-1][0])
-        '''卖方
-        ask1=orders_btc_usdt['asks'][-1][0]
-        ask1_volum=orders_btc_usdt['asks'][-1][1]
-        ask2=orders_btc_usdt['asks'][-2][0]
-        ask2_volum=orders_btc_usdt['asks'][-2][1]
-        ask3=orders_btc_usdt['asks'][-3][0]
-        ask3_volum=orders_btc_usdt['asks'][-3][1]
-        '''
 
 
 
         ############## 库存与余额检查  确保现金与持仓占比在30%-70%   [暂不考虑]
-
-
-
-        ######   卖策略——涨幅到达/拐点及时抛/连续下跌行情抛/
-
-        #print(orders['bids'][0][0])
-        '''
-        bid_price[0]=orders['bids'][0][0]
-        bid_price[1]=orders['bids'][1][0]
-        bid_price[2]=orders['bids'][2][0]
-        bid_price[3]=orders['bids'][3][0]
-        bid_price[4]=orders['bids'][4][0]
-
-        bid_volum[0]=orders['bids'][0][1]
-        bid_volum[1]=orders['bids'][1][1]
-        bid_volum[2]=orders['bids'][2][1]
-        bid_volum[3]=orders['bids'][3][1]
-        bid_volum[4]=orders['bids'][4][1]
-
-
-        ask_price[0]=orders['asks'][-1][0]
-        ask_price[1]=orders['asks'][-2][0]
-        ask_price[2]=orders['asks'][-3][0]
-        ask_price[3]=orders['asks'][-4][0]
-        ask_price[4]=orders['asks'][-5][0]
-
-        ask_price[0]=orders['asks'][-1][0]
-        ask_price[1]=orders['asks'][-2][0]
-        ask_price[2]=orders['asks'][-3][0]
-        ask_price[3]=orders['asks'][-4][0]
-        ask_price[4]=orders['asks'][-5][0]
-        '''
-
-        '''
-        for x in orders['bids'][0:5]:
-            bid_price.append(x[0])
-            bid_volum.append(x[1])
-
-        for x in orders['asks'][::-5]:
-            ask_price.append(x[0])
-            ask_volum.append(x[1])
-        print(ask_price)
-       ''' 
-        bid1=float(orders['bids'][0][0])
-        bid1_volum=float(orders['bids'][0][1])
 
 
 
@@ -977,8 +925,8 @@ def action_go(coin_name):
                     tradeHistorys_buy_volum.append(amount)
                     tradeHistorys_buy_volum_sum=tradeHistorys_buy_volum_sum+amount
             #print(tradeHistorys_buy_price)
-            tradeHistorys_sell_price_xielv,tradeHistorys_sell_price_max=xielv(tradeHistorys_sell_price)
-            tradeHistorys_buy_price_xielv,tradeHistorys_buy_price_max=xielv(tradeHistorys_buy_price)
+            tradeHistorys_sell_price_xielv,tradeHistorys_sell_price_max,tradeHistorys_sell_price_min=xielv(tradeHistorys_sell_price)
+            tradeHistorys_buy_price_xielv,tradeHistorys_buy_price_max,tradeHistorys_buy_price_min=xielv(tradeHistorys_buy_price)
         #print('历史价格斜率为,',tradeHistorys_sell_price_xielv,tradeHistorys_sell_price_max)
         #tradeHistorys_sell_price=#['rate']
         #print(tradeHistorys_sell_price)
@@ -1053,7 +1001,16 @@ def action_go(coin_name):
 
 
 
-        if ma_5[-1]==ma_12[-1] and ma_5[-1]<ma_5[-2] and ma5_xielv<ma12_xielv <0 and ma_5[-1]>ma_12[-1] and tradeHistorys_sell_price_xielv<0 and double_down=1:
+        if ma_5[-1]==ma_12[-1] and ma_5[-1]<ma_5[-2] and ma5_xielv<ma12_xielv <0 and ma_5[-1]>ma_12[-1] and tradeHistorys_sell_price_xielv<0 and double_down==1:
+            volume_sell_run_left,money_sell,money_profit=sell_run(volume_now*0.9,orders['bids'],coin_name)
+            volume_now=volume_now*0.1+volume_sell_run_left
+            my_account['available'][coin_name.upper()]=str(volume_now)
+            lock.acquire()
+            try:
+                my_account['available']['USDT']=str(float(my_account['available']['USDT'])+money_sell)
+            finally:
+                lock.release()
+            print(coin_name,"——【下降跑】 损失",money_profit,' 库存为',volume_now,' USDT余额=',my_account['available']['USDT'])
 
         #and :
 
@@ -1063,7 +1020,7 @@ def action_go(coin_name):
 
         ###############存货无    买操作  
         ##############第一操作   MA5 上穿 MA12
-        if volume_now*bid1<100 and float(my_account['available']['USDT']>1:
+        if volume_now*bid1<100 and float(my_account['available']['USDT'])>1:
             if ma_5[-1]==ma_12[-1] and ma_5[-2]<ma_12[-2] and ma5_xielv>0 and ma5_xielv>ma12_xielv:
                     ask1=float(orders['asks'][-1][0])
                     ask1_volum=float(orders['asks'][-1][1])
