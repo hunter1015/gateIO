@@ -35,10 +35,11 @@ import threading
 
 
 from gateAPI import GateIO
+sss
 
 # 填写 APIKEY APISECRET
-apikey = '95E7BBF8-51DB-4557-8FF9-4C3542C108DB'
-secretkey = '13b1aeb9532ba6e60d93dc036cbe3ad60e7baa14301c85d7a9ee813238a3f564'
+apikey = ''
+secretkey = ''
 API_URL = 'data.gate.io'
 
 
