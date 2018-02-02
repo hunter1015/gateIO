@@ -649,7 +649,7 @@ def xielv(madata):
     # def arange(start=None, stop=None, step=None, dtype=None)
     maxValue = max(madata)
     minValue =  min(madata)
-    x = np.arange(1, len(madata) + 1, 1)
+    x = np.arange(0,len(madata)*madata[0], madata[0])
     y = np.array(madata)
     z = np.polyfit(x, y, 1)
     p = np.poly1d(z)
@@ -853,7 +853,7 @@ def action_go(coin_name):
             startTime=time.time()
         if(loopNumber==1):
             endTime=time.time()
-            print("本线程一次时间消耗为",endTime-startTime)
+            print(coin_name,"-本线程一次时间消耗为",endTime-startTime)
         loopNumber=loopNumber+1
         #if loopFlag>20:
             
@@ -880,6 +880,8 @@ def action_go(coin_name):
 
 
         ##############   第一操作-大涨卖-检查收益是否瞬间大于10% 那就直接卖掉    收益>10%的情况
+        bid1=float(orders['bids'][0][0])
+        bid1_volum=float(orders['bids'][0][1])
         volume_now=float(my_account['available'][coin_name.upper()])
         money_profit=0
         if volume_now*bid1>0.5:
@@ -987,7 +989,8 @@ def action_go(coin_name):
             tradeHistorys_sell_duo=1
 
         #如果从高点下降
-        if ma_5[-1]>ma_12[-1] and ma_5[-1]<ma[-2] and ma5_xielv<ma5_xielv_last and double_down==1 and tradeHistorys_sell_duo==1 and data_last_1_openPrice>(ma_5_max+ma_5_min)*1.025: #and bid1 my_price[coin_name.upper()]*:
+        if ma_5[-1]>ma_12[-1] and ma_5[-1]<ma_5[-2] and ma5_xielv<ma5_xielv_last and double_down==1 and tradeHistorys_sell_duo==1 and data_last_1_openPrice>((ma_5_max+ma_5_min)*1.025):
+            #and bid1 my_price[coin_name.upper()]*:
             volume_sell_run_left,money_sell,money_profit=sell_run(volume_now*0.8,orders['bids'],coin_name)
             volume_now=volume_now*0.2+volume_sell_run_left
             my_account['available'][coin_name.upper()]=str(volume_now)
