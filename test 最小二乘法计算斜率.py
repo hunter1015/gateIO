@@ -21,6 +21,7 @@ def MA_xielv(madata):
     print('长度x=',len(x))
     #y = numpy.array([(x-madata[-1]) for x in madata])
     y = numpy.array(madata)
+    print('长度y=', len(y))
     z = numpy.polyfit(x, y, 1)
     p = numpy.poly1d(z)
     #plt.plot(p)
@@ -53,3 +54,10 @@ print(xielv,'   耗时',endtime-starttime)
 
 ask=[5,4,3,2,1,3,5,7]
 print(ask[:-4:-1])
+print(ask[-4:-1])
+
+madata= madata= [0.10516,0.10534,0.1055,
+                 ]
+x = numpy.arange(0, len(madata) * madata[0], madata[0])
+print('x长度=',len(x))
+print('x=',x)

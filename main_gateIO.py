@@ -45,27 +45,27 @@ coinCode = 'btc_usdt'
 
 # 指标 MA
 MA5 = 5
-MA12 = 12
+MA10 = 10
 MA26 = 26
 
 MA_5_List = []
-MA_12_List = []
+MA_10_List = []
 MA_26_List = []
 
 MA_1min_5_List = []
-MA_1min_12_List = []
+MA_1min_10_List = []
 MA_1min_26_List = []
 
 MA_5min_5_List = []
-MA_5min_12_List = []
+MA_5min_10_List = []
 MA_5min_26_List = []
 
 MA_15min_5_List = []
-MA_15min_12_List = []
+MA_15min_10_List = []
 MA_15min_26_List = []
 
 MA_30min_5_List = []
-MA_30min_12_List = []
+MA_30min_10_List = []
 MA_30min_26_List = []
 
 orders_usdt = []
@@ -190,7 +190,7 @@ def kline_paint(kdata):
     #
     # 请注意计算需要内容为float类型的
     Av1 = talib.MA(daysreshape.close.values, MA5)
-    Av2 = talib.MA(daysreshape.close.values, MA12)
+    Av2 = talib.MA(daysreshape.close.values, MA10)
     # Av1 = movingaverage(daysreshape.close.values, MA1)
     # Av2 = movingaverage(daysreshape.close.values, MA2)
     SP = len(daysreshape.date.values[MA2 - 1:])
@@ -261,7 +261,7 @@ def kline_paint(kdata):
     # print(json_data)
 
 
-def write2file_1min_12hour(coincode):
+def write2file_1min_10hour(coincode):
     firstFlag = 0
     i = 1
     kline_data_last = None
@@ -290,20 +290,20 @@ def write2file_1min_12hour(coincode):
             kline_data_list_closeData = [float(x['close']) for x in kLineDic[0:]]
             # MA(float(kLineDic['close'].values),5)
             # MA(float(kLineDic['close'].values),5)
-            # MA(kline_data_list_closeData,12)
+            # MA(kline_data_list_closeData,10)
             kline_data_list_closeData_np = np.array(kline_data_list_closeData)
             MA_5_List = MA(kline_data_list_closeData_np, 5)
-            MA_12_List = MA(kline_data_list_closeData_np, 12)
+            MA_10_List = MA(kline_data_list_closeData_np, 10)
             MA_26_List = MA(kline_data_list_closeData_np, 26)
 
             '''
             for x in range(len(MA_5_List)-1,-1,-1):
-            #for x,y,z in MA_5_List[0:],MA_12_List[0:],MA_26_List[0:]:
-                if MA_5_List[x]>MA_12_List[x] and MA_12_List[x]>MA_26_List[x]
-                    print('MA5>MA12>MA26',x)
+            #for x,y,z in MA_5_List[0:],MA_10_List[0:],MA_26_List[0:]:
+                if MA_5_List[x]>MA_10_List[x] and MA_10_List[x]>MA_26_List[x]
+                    print('MA5>MA10>MA26',x)
             '''
             # csv文件写入-MA指标的内容
-            MAcsv = pd.DataFrame({'MA 5': MA_5_List, 'MA12': MA_12_List, 'MA26': MA_26_List})
+            MAcsv = pd.DataFrame({'MA 5': MA_5_List, 'MA10': MA_10_List, 'MA26': MA_26_List})
             # print(MAcsv)
             MAcsv.to_csv("d:\\MA_1MIN.csv", index=False, sep=',')
             ma_data_update = kline_data_list_closeData[-25:]
@@ -414,22 +414,22 @@ def write2file_1min_12hour(coincode):
                 ma_data_update_data_np = np.array(ma_data_update)
 
                 ma5update = MA(ma_data_update_data_np, 5)
-                ma12update = MA(ma_data_update_data_np, 12)
+                ma10update = MA(ma_data_update_data_np, 10)
                 ma26update = MA(ma_data_update_data_np, 26)
 
                 with open('d:\\MA_1MIN.csv', 'a+', newline='') as f:
                     writer = csv.writer(f)
                     for row in range(25, len(ma5update)):
                         # row.append(row[len(row)-1])
-                        # print(ma5update[row],',',ma12update[row],',',ma26update[row])
-                        writer.writerow([ma5update[row], ma12update[row], ma26update[row]])
-                        # writer.writerow(ma5update[row]+','+ma12update[row]+','+ma26update[row])
+                        # print(ma5update[row],',',ma10update[row],',',ma26update[row])
+                        writer.writerow([ma5update[row], ma10update[row], ma26update[row]])
+                        # writer.writerow(ma5update[row]+','+ma10update[row]+','+ma26update[row])
                 # f.write(kline_data_list[x]+'\n')
 
-                # 保存MA值的三张列表，把更新的MA值加进去，更新的几条K线数据通过向前倒退25个数据，来完成5\12\26的计算，再
+                # 保存MA值的三张列表，把更新的MA值加进去，更新的几条K线数据通过向前倒退25个数据，来完成5\10\26的计算，再
                 # 从这几条新数据截取一下，放回原来的数组中
                 MA_5_List = np.append(MA_5_List, ma5update[25:])
-                MA_12_List = np.append(MA_12_List, ma12update[25:])
+                MA_10_List = np.append(MA_10_List, ma10update[25:])
                 MA_26_List = np.append(MA_26_List, ma26update[25:])
                 # print('MA_5_List 长度为',len(MA_5_List),' 值为\n',MA_5_List)
 
@@ -447,10 +447,10 @@ def write2file_1min_12hour(coincode):
     return "write2file结束"
 
 
-# print(write2file_1min_12hour('btc_usdt'))
+# print(write2file_1min_10hour('btc_usdt'))
 
 
-def update_klineData(coincode, time_unit, time_period, if_is_first, datalast, ma5, ma12, ma26):
+def update_klineData(coincode, time_unit, time_period, if_is_first, datalast, ma5, ma10, ma26):
     # 判断是否为第一次执行（建立文件，全部更新）
     firstFlag = if_is_first
     kline_data_last = datalast
@@ -461,7 +461,7 @@ def update_klineData(coincode, time_unit, time_period, if_is_first, datalast, ma
     if kline_data == datalast:
         # time.sleep(1+random.random())
         # print('检查和上次读取的数据相同，本次不操作')
-        return datalast, ma5, ma12, ma26
+        return datalast,0, ma5, ma10, ma26
 
     # 保存本次数据，作为last数据，勇于下次检查
     # datalast=kline_data
@@ -473,15 +473,20 @@ def update_klineData(coincode, time_unit, time_period, if_is_first, datalast, ma
         # print('时间偏差:当前时间为',timeShift(time.time()),'  最新信息时间为',timeShift(kline_data_list[-1].split(',')[0]))
         head = [x for x in kline_data_list[0].split(',')]
         kLineDic = [dict(zip(head, x.split(','))) for x in kline_data_list[1:]]
-        kline_data_list_closeData = [float(x['close']) for x in kLineDic[0:]]
+        kline_data_list_closeData = [float(x['close'])for x in kLineDic[0:]]
+        kline_data_list_volumeData = [float(x['volume']) for x in kLineDic[0:]]
+        #kline_data_list_closeData,kline_data_list_volumeData = [([float(x['close']),float(x['volume'])]) for x in kLineDic[0:]]
+        #kline_data_list_volumeData = [float(x['volume']) for x in kLineDic[0:]]
 
         kline_data_list_closeData_np = np.array(kline_data_list_closeData)
         ma5 = MA(kline_data_list_closeData_np, 5)
-        ma12 = MA(kline_data_list_closeData_np, 12)
+        ma10 = MA(kline_data_list_closeData_np, 10)
         ma26 = MA(kline_data_list_closeData_np, 26)
+        if ma5[6]==None:
+            print('ma5 检测为空')
 
         ''' 将MA值保存到文件中
-        MAcsv = pd.DataFrame({'MA 5':ma5,'MA12':ma12,'MA26':ma26})
+        MAcsv = pd.DataFrame({'MA 5':ma5,'MA10':ma10,'MA26':ma26})
         #print(MAcsv)
         MAcsv.to_csv('d:\\'+coincode+'_MA_5min_24h.csv',index=False,sep=',')
         #旧版本 用于保存最后一个向前推25个值的list  勇于计算MA26
@@ -508,13 +513,13 @@ def update_klineData(coincode, time_unit, time_period, if_is_first, datalast, ma
         # print('position=',position)
         if (position > 10):
             # print('本次数据不包含更新数据，所以跳过')
-            return datalast, ma5, ma12, ma26
+            return datalast, ma5, ma10, ma26
         if messageWrong == 1:
             # print('本次数据不包含更新数据，所以跳过')
-            return datalast, ma5, ma12, ma26
+            return datalast, ma5, ma10, ma26
         if position == 0:
             # print('本次数据不包含更新数据，所以跳过')
-            return datalast, ma5, ma12, ma26
+            return datalast, ma5, ma10, ma26
     # else:
     #   kline_update_point=
 
@@ -547,16 +552,16 @@ def update_klineData(coincode, time_unit, time_period, if_is_first, datalast, ma
             ma_data_update_data_np=np.array(ma_data_update)
 
             ma5update=MA(ma_data_update_data_np,5)
-            ma12update=MA(ma_data_update_data_np,12)
+            ma10update=MA(ma_data_update_data_np,10)
             ma26update=MA(ma_data_update_data_np,26)
 
             with open('d:\\'+coincode+'_MA_5min_24h.csv','a+',newline='') as f:
                 writer = csv.writer(f)
                 for row in range(25,len(ma5update)):
                     #row.append(row[len(row)-1])
-                    #print(ma5update[row],',',ma12update[row],',',ma26update[row])
-                    writer.writerow([ma5update[row],ma12update[row],ma26update[row]])
-                    #writer.writerow(ma5update[row]+','+ma12update[row]+','+ma26update[row])
+                    #print(ma5update[row],',',ma10update[row],',',ma26update[row])
+                    writer.writerow([ma5update[row],ma10update[row],ma26update[row]])
+                    #writer.writerow(ma5update[row]+','+ma10update[row]+','+ma26update[row])
             #f.write(kline_data_list[x]+'\n')
             '''
 
@@ -574,14 +579,14 @@ def update_klineData(coincode, time_unit, time_period, if_is_first, datalast, ma
         # 更新指标-MA的原始数据
         ma_data_update_data_np = np.array(ma_data_update)
         ma5update = MA(ma_data_update_data_np, 5)
-        ma12update = MA(ma_data_update_data_np, 12)
+        ma10update = MA(ma_data_update_data_np, 10)
         ma26update = MA(ma_data_update_data_np, 26)
 
         ma5 = np.append(ma5, ma5update[25:])
-        ma12 = np.append(ma5, ma12update[25:])
+        ma10 = np.append(ma5, ma10update[25:])
         ma26 = np.append(ma5, ma26update[25:])
 
-    return kline_data_list, ma5, ma12, ma26
+    return kline_data_list,kline_data_list_volumeData,ma5, ma10, ma26
 
 
 def update_orderBooks(coincode):
@@ -613,11 +618,32 @@ def xielv(madata):
     maxValue = max(madata)
     minValue = min(madata)
     x = np.arange(0, len(madata) * madata[0], madata[0])
+    #print('madata[3]=',madata[3])
+    #print('x长度=',len(x))
+    #print('x=', x)
     y = np.array(madata)
+    #print('y长度=',len(y))
+    #print('y=',y)
+
+
     z = np.polyfit(x, y, 1)
     p = np.poly1d(z)
 
     return round(z[0], 4), maxValue, minValue
+
+
+def volumeCalculate(volume):
+    last2_sum=volume[-1]+volume[-2]
+    last3_sum=last2_sum+volume[-3]
+    last5_sum=last3_sum+volume[-4]+volume[-5]
+    last8_sum=sum(volume[:-9:-1])
+
+
+
+    # 2in5 的话 成交量要在 55%以上才算交易量较高
+    # 3in8 的话 成交量要在 52%以上才算交易量较高
+    return last2_sum/last5_sum, last3_sum/last8_sum
+
 
 
 def sell(price, volume, orders, coin_name):
@@ -701,12 +727,12 @@ lock = threading.Lock()
 
 
 def action_go(coin_name):
-    print(coin_name, "监控开始")
+    print(coin_name, "监控开始,当前库存为",my_account['available'][coin_name.upper()],'USDT为',my_account['available']['USDT'])
 
     # 更新K线文件信息（1分、5分、15分、30分）
-    # kdata_update_1min_12hour = threading.Thread(target=write2file_1min_12hour('btc_usdt'))
-    # kdata_update_1min_12hour.start()
-    # kdata_update_1min_12hour.join()
+    # kdata_update_1min_10hour = threading.Thread(target=write2file_1min_10hour('btc_usdt'))
+    # kdata_update_1min_10hour.start()
+    # kdata_update_1min_10hour.join()
 
     # order_update = threading.Thread(target=update_orderBooks('btc_usdt'))
     # order_update.start()
@@ -716,50 +742,69 @@ def action_go(coin_name):
     loopNumber = 0
     dealNumber = 0
     datalast = None
+    data_15min_last=None
     ma_5 = None
-    ma_12 = None
+    ma_10 = None
     ma_26 = None
+    volume_5min_2in5=0
+    volume_5min_3in8 = 0
+
     ma5_xielv = 0
-    ma12_xielv = 0
+    ma10_xielv = 0
     ma5_xielv_last = 0
-    ma12_xielv_last = 0
+    ma10_xielv_last = 0
     ma_5_max = 0
-    ma_12_max = 0
+    ma_10_max = 0
     ma_5_min = 0
-    ma_12_min = 0
+    ma_10_min = 0
 
     ma_5_15min = None
-    ma_12_15min = None
+    ma_10_15min = None
     ma_26_15min = None
+    volume_15min_2in5=0
+    volume_15min_3in8 = 0
     ma5_xielv_15min = 0
-    ma12_xielv_15min = 0
+    ma10_xielv_15min = 0
     ma5_xielv_last_15min = 0
-    ma12_xielv_last_15min = 0
+    ma10_xielv_last_15min = 0
     ma_5_max_15min = 0
-    ma_12_max_15min = 0
+    ma_10_max_15min = 0
     ma_5_min_15min = 0
-    ma_12_min_15min = 0
+    ma_10_min_15min = 0
 
 
     '''
         createVar coin_name_+'MA_5min_5_List' as t1
-        createVar coin_name_+'MA_5min_12_List' as
+        createVar coin_name_+'MA_5min_10_List' as
         createVar coin_name_+'MA_5min_26_List'
     '''
     # 首次更新5分钟K线数据
-    tp1, tp2, tp3, tp4 = update_klineData(coin_name, 300, 12, 0, datalast, ma_5, ma_12, ma_26)
+    tp1, data_5min_volume,tp2, tp3, tp4 = update_klineData(coin_name, 300, 12, 0, datalast, ma_5, ma_10, ma_26)
+    volume_5min_2in5,volume_5min_3in8=volumeCalculate(data_5min_volume)
     datalast = tp1
     ma_5 = tp2
-    ma_12 = tp3
+    ma_10 = tp3
     ma_26 = tp4
+    #print('5分 ma_5=', ma_5)
+
     ma5_xielv, ma_5_max, ma_5_min = xielv(ma_5[-3:])
-    ma12_xielv, ma_12_max, ma_12_min = xielv(ma_12[-3:])
+    ma10_xielv, ma_10_max, ma_10_min = xielv(ma_10[-3:])
 
     #首次更新15分钟K线数据
-    data_15min, ma5_15min, ma12_15min, ma26_15min = update_klineData(coin_name, 900, 12, 0, datalast, ma_5_15min, ma_12_15min, ma_26_15min)
+    data_15min,data_15min_volume,ma_5_15min, ma_10_15min, ma_26_15min = update_klineData(coin_name, 900, 12, 0, data_15min_last, ma_5_15min, ma_10_15min, ma_26_15min)
+    #data_15min, data_15min_volume, tp2, tp3, tp4 = update_klineData(coin_name, 900, 12, 0,data_15min_last, ma_5_15min, ma_10_15min, ma_26_15min)
+    #ma5_15min=tp2
+    #ma10_15min=tp3
+    #ma26_15min=tp4
+    #print('15分 ma_5_15min=',ma_5_15min)
+    
+    volume_15min_2in5, volume_15min_3in8 = volumeCalculate(data_15min_volume)
     data_15min_last = data_15min
+    print(coin_name,'ma_5_15min[-3:]=',ma_5_15min[-3:],' 长度=',len(ma_5_15min[-3:]))
+    print(coin_name,'ma_10_15min[-3:]=', ma_10_15min[-3:],' 长度=',len(ma_10_15min[-3:]))
     ma5_xielv_15min, ma_5_max_15min, ma_5_min_15min = xielv(ma_5_15min[-3:])
-    ma12_xielv_15min, ma_12_max_15min, ma_12_min_15min = xielv(ma_12_15min[-3:])
+
+    ma10_xielv_15min, ma_10_max_15min, ma_10_min_15min = xielv(ma_10_15min[-3:])
 
     #首次更新订单簿
     orders = update_orderBooks(coin_name + '_usdt')
@@ -803,6 +848,7 @@ def action_go(coin_name):
     tradeHistorys = []
     tradeHistorys_last = []
 
+    lastBuytime=None
     while True:
         # temp=write2file_5min_24hour(coin_name,1,datalast)
 
@@ -817,21 +863,25 @@ def action_go(coin_name):
         # 每次都更新5分钟K线数据
         if time.time() - data_update_5min_flag_time > 5:
             data_update_5min_flag_time = time.time()
-            temp, ma1, ma2, ma3 = update_klineData(coin_name, 300, 12, 1, datalast, ma_5, ma_12, ma_26)
+            temp, temp_volume,ma1, ma2, ma3 = update_klineData(coin_name, 300, 12, 1, datalast, ma_5, ma_10, ma_26)
             if datalast != temp:
                 data_new = 1
                 datalast = temp
+                data_5min_volume=temp_volume
                 ma_5 = ma1
-                ma_12 = ma2
+                ma_10 = ma2
                 ma_26 = ma3
-                
+                volume_5min_2in5, volume_5min_3in8 = volumeCalculate(data_5min_volume)
+
         data_update_15min_flag_time = time.time()
         #每五分钟更新一下15分钟K线数据
         if time.time()-data_update_15min_flag_time>300:
             data_update_15min_flag_time=time.time()
-            data_15min, ma5_15min, ma12_15min, ma26_15min = update_klineData(coin_name, 900, 24, 1, data_15min_last, ma_5_15min, ma_12_15min, ma_26_15min)
+            data_15min, data_15min_volume_temp,ma5_15min, ma10_15min, ma26_15min = update_klineData(coin_name, 900, 24, 1, data_15min_last, ma_5_15min, ma_10_15min, ma_26_15min)
             if data_15min_last != data_15min:
                 data_15min_last = data_15min
+                data_15min_volume=data_15min_volume_temp
+                volume_15min_2in5, volume_15min_3in8 = volumeCalculate(data_15min_volume)
                 data_new_15min = 1
 
 
@@ -943,34 +993,40 @@ def action_go(coin_name):
         # data_new=1 意思是检测到本次k线数据 更新数据与上次不同
         if data_new == 1:
             ma5_xielv_last = ma5_xielv
-            ma12_xielv_last = ma12_xielv
+            ma10_xielv_last = ma10_xielv
             ma5_xielv, ma_5_max, ma_5_min = xielv(ma_5[-3:])
-            ma12_xielv, ma_12_max, ma_12_min = xielv(ma_12[-3:])
+            ma10_xielv, ma_10_max, ma_10_min = xielv(ma_10[-3:])
+        if data_new_15min == 1:
+            ma5_xielv_last_15min = ma5_xielv_15min
+            ma10_xielv_last_15min = ma10_xielv_15min
+            ma5_xielv_15min, ma_5_max_15min, ma_5_min_15min = xielv(ma_5_15min[-3:])
+            ma10_xielv_15min, ma_10_max_15min, ma_10_min_15min = xielv(ma_10_15min[-3:])
+
         # ma26_xielv, ma_26_max = xielv(ma_26[-5:])
 
         # MA5=MA10  判断两条线的趋势
-        # if ma_5[-1]==ma_12[-1]:
-        #   if ma5_xielv <0 and tradeHistorys_sell_price_xielv<0 and  ma_5[-1]<ma_5[-2] and ma_5[-1]>ma_12[-1]:
+        # if ma_5[-1]==ma_10[-1]:
+        #   if ma5_xielv <0 and tradeHistorys_sell_price_xielv<0 and  ma_5[-1]<ma_5[-2] and ma_5[-1]>ma_10[-1]:
 
         ##############第三操作   收益大于3% 小于8%的情况   在参考K线情况决定是否卖出
         if volume_now * bid1 > 0.5:
-            # 如果有库存并且涨幅到了
+            # 如果有库存并且涨幅>3%
             if bid1 >= my_price[coin_name.upper()] * 1.03:
-                # 如果成交历史中 卖斜率<0  买斜率<0   /    MA5[-1]<MA5[-2]    /
-                if ma_5[-1] < ma_5[-2] and ma_5[-1] > ma_12[-1] and ma12_xielv > 0:
+
+                # 如果成交历史中 MA5[-1]<MA5[-2]  10MA线还是上涨的   前两天或前三天交易量有个明显的增加   /
+
+                if ma_5[-1] < ma_5[-2] and ma_5[-1] > ma_10[-1] and ma10_xielv > 0 and (volume_5min_3in8>0.52 or volume_5min_2in5 >0.55):
                     volume_now, money_sell, money_profit = sell(my_price[coin_name.upper()] * 1.03, volume_now,
                                                                 orders['bids'], coin_name)
                     my_account['available'][coin_name.upper()] = str(volume_now)
-
                     lock.acquire()
                     try:
                         my_account['available']['USDT'] = str(float(my_account['available']['USDT']) + money_sell)
                     finally:
                         lock.release()
-
                     print(coin_name, "——【小涨卖】指标不好-涨了超过3% 赶紧卖,  获利", money_profit, ' 库存为', volume_now, ' USDT余额=',
                           my_account['available']['USDT'])
-                    time.sleep(15)
+                    #time.sleep(15)
                     continue
         ##############第四操作   行情不好，持续下跌，准备割肉跑路
 
@@ -978,13 +1034,11 @@ def action_go(coin_name):
         double_down = 0
         tradeHistorys_sell_duo = 0
         # print("datalast[-1]为",datalast[-1])
-
         data_last_1_closePrice = datalast[-1].split(',')[4]
         data_last_1_openPrice = datalast[-1].split(',')[1]
 
         data_last_2_closePrice = datalast[-2].split(',')[4]
         data_last_2_openPrice = datalast[-2].split(',')[1]
-
         if data_last_1_openPrice > data_last_1_closePrice and data_last_2_openPrice > data_last_2_closePrice:
             double_down = 1
 
@@ -993,7 +1047,7 @@ def action_go(coin_name):
             tradeHistorys_sell_duo = 1
         '''
         # 如果从高点下降 并且上一日的开盘价是近期的比较高的点
-        if ma_5[-1] > ma_12[-1] and ma_5[-1] < ma_5[-2] and ma5_xielv < ma5_xielv_last and double_down == 1 and data_last_1_openPrice > ((ma_5_max + ma_5_min) * 1.025):
+        if ma_5[-1] > ma_10[-1] and ma_5[-1] < ma_5[-2] and ma5_xielv < ma5_xielv_last and double_down == 1 and data_last_1_openPrice > ((ma_5_max + ma_5_min) * 1.025) and (volume_5min_3in8>0.52 or volume_5min_2in5 >0.55):
             # and bid1 my_price[coin_name.upper()]*:
             volume_sell_run_left, money_sell, money_profit = sell_run(volume_now * 0.8, orders['bids'], coin_name)
             volume_now = volume_now * 0.2 + volume_sell_run_left
@@ -1005,9 +1059,10 @@ def action_go(coin_name):
                 lock.release()
             print(coin_name, "——【高点跑】 损失", money_profit, ' 库存为', volume_now, ' USDT余额=',
                   my_account['available']['USDT'])
+            print(coin_name, "-行情变差 赶紧跑路,MA5斜率下降但还高于MA10")
+            continue
 
-        if ma_5[-1] == ma_12[-1] and ma_5[-1] < ma_5[-2] and ma5_xielv < ma12_xielv < 0 and ma_5[-1] > ma_12[
-            -1] and tradeHistorys_sell_price_xielv < 0 and double_down == 1:
+        if ma_5[-1] == ma_10[-1] and ma_5[-1] < ma_5[-2] and ma5_xielv < ma10_xielv and ma5_xielv< 0 and ma_5[-1] > ma_10[-1] and double_down == 1:
             volume_sell_run_left, money_sell, money_profit = sell_run(volume_now * 0.9, orders['bids'], coin_name)
             volume_now = volume_now * 0.1 + volume_sell_run_left
             my_account['available'][coin_name.upper()] = str(volume_now)
@@ -1018,55 +1073,61 @@ def action_go(coin_name):
                 lock.release()
             print(coin_name, "——【下降跑】 损失", money_profit, ' 库存为', volume_now, ' USDT余额=',
                   my_account['available']['USDT'])
+            print(coin_name,"-行情变差 赶紧跑路，MA5斜率下穿MA10")
+            continue
+
 
         # print("行情变差 赶紧跑路")
 
-        ###############存货无    买操作  
-        ##############第一操作   MA5 上穿 MA12
-        if volume_now * bid1 < 100 and float(my_account['available']['USDT']) > 1:
-            if ma_5[-1] == ma_12[-1] and ma_5[-2] < ma_12[-2] and ma5_xielv > 0 and ma5_xielv > ma12_xielv:
-                ask1 = float(orders['asks'][-1][0])
-                ask1_volum = float(orders['asks'][-1][1])
-                money_to_buy = float(my_account['available']['USDT']) * 1 / 3
-                volume_now, money_left = buy(ask1, money_to_buy, orders['asks'], coin_name)
-                money_cost = money_to_buy - money_left
-                my_account['available'][coin_name.upper()] = str(
-                    float(my_account['available'][coin_name.upper()]) + volume_now)
-                volume_now = float(my_account['available'][coin_name.upper()])
-                lock.acquire()
-                try:
-                    my_account['available']['USDT'] = str(float(my_account['available']['USDT']) * 2 / 3 + money_left)
-                finally:
-                    lock.release()
-                print(coin_name, "——【上穿买】MA指标上穿-买,  花费", money_cost, '  目前库存为', volume_now, ' USDT余额=',
-                      my_account['available']['USDT'])
-            if ma_5[-1] > ma_12[-1] and ma_5[-2] > ma_12[
-                -2] and ma5_xielv > 0 and ma12_xielv > 0 and ma5_xielv > ma12_xielv and tradeHistorys_buy_price_xielv > 0:
-                ask1 = float(orders['asks'][-1][0])
-                ask1_volum = float(orders['asks'][-1][1])
-                money_to_buy = float(my_account['available']['USDT']) * 1 / 3
-                volume_now, money_left = buy(ask1, money_to_buy, orders['asks'], coin_name)
-                money_cost = money_to_buy - money_left
-                my_account['available'][coin_name.upper()] = str(
-                    float(my_account['available'][coin_name.upper()]) + volume_now)
-                volume_now = float(my_account['available'][coin_name.upper()])
-                lock.acquire()
-                try:
-                    my_account['available']['USDT'] = str(float(my_account['available']['USDT']) * 2 / 3 + money_left)
-                finally:
-                    lock.release()
-                print(coin_name, "——【上涨趋势买】MA指标上穿-买,  花费", money_cost, '  目前库存为', volume_now, ' USDT余额=',
-                      my_account['available']['USDT'])
+        ###############买操作######################
+        #如果当前库存价值小于300元 并且USDT余额大于1美金  可以进行买操作
+        #第一操作   MA5 上穿 MA10
+        if(lastBuytime!=None and time.time()-lastBuytime>15):
+            if volume_now * bid1 < 50 and float(my_account['available']['USDT']) > 1:
+                if ma_5[-1] == ma_10[-1] and ma_5[-2] < ma_10[-2] and ma5_xielv > 0 and ma5_xielv > ma10_xielv:
+                    ask1 = float(orders['asks'][-1][0])
+                    ask1_volum = float(orders['asks'][-1][1])
+                    money_to_buy = float(my_account['available']['USDT']) * 1 / 3
+                    volume_now, money_left = buy(ask1, money_to_buy, orders['asks'], coin_name)
+                    money_cost = money_to_buy - money_left
+                    my_account['available'][coin_name.upper()] = str(
+                        float(my_account['available'][coin_name.upper()]) + volume_now)
+                    volume_now = float(my_account['available'][coin_name.upper()])
+                    lock.acquire()
+                    try:
+                        my_account['available']['USDT'] = str(float(my_account['available']['USDT']) * 2 / 3 + money_left)
+                    finally:
+                        lock.release()
+                    print(coin_name, "——【上穿买】MA指标上穿-买,  花费", money_cost, '  目前库存为', volume_now, ' USDT余额=',
+                          my_account['available']['USDT'])
+                    lastBuytime = time.time()
+                if ma_5[-1] > ma_10[-1] and ma_5[-2] > ma_10[-2] and ma5_xielv > 0 and ma10_xielv > 0 and ma5_xielv > ma10_xielv:
+                    ask1 = float(orders['asks'][-1][0])
+                    ask1_volum = float(orders['asks'][-1][1])
+                    money_to_buy = float(my_account['available']['USDT']) * 1 / 3
+                    volume_now, money_left = buy(ask1, money_to_buy, orders['asks'], coin_name)
+                    money_cost = money_to_buy - money_left
+                    my_account['available'][coin_name.upper()] = str(
+                        float(my_account['available'][coin_name.upper()]) + volume_now)
+                    volume_now = float(my_account['available'][coin_name.upper()])
+                    lock.acquire()
+                    try:
+                        my_account['available']['USDT'] = str(float(my_account['available']['USDT']) * 2 / 3 + money_left)
+                    finally:
+                        lock.release()
+                    print(coin_name, "——【上涨趋势买】MA指标上穿-买,  花费", money_cost, '  目前库存为', volume_now, ' USDT余额=',
+                          my_account['available']['USDT'])
+                    lastBuytime = time.time()
 
-        time.sleep(0.1 + random.random())
-        # print("本次无机会")
+            #time.sleep(0.1 + random.random())
+            # print("本次无机会")
 
     print('多线程测试')
 
     # 拿到最新订单簿
     # print (gate.orderBook('btc_usdt'))
 
-    # 计算MA5 MA12 MA26的指标并保存
+    # 计算MA5 MA10 MA26的指标并保存
 
     # 如果当前 卖1价>持有价*1.2 and  卖1量的检查 与卖2价的检查
     '''

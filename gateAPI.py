@@ -75,7 +75,7 @@ class GateIO:
             timetotal='24'
         #URL = "https://gate.io/json_svr/query/?u=10&c=380225&type=kline&symbol=eth_usdt&group_sec=900&range_hour=24"
         #URL = "https://gate.io/json_svr/query/?u=10&c=380225&type=kline&symbol="+pairs+"&group_sec="+timeperiod+"&range_hour=24"
-        URL = "/json_svr/query/?u=10&c=380225&type=kline&symbol="+pairs+"&group_sec="+timeperiod+"&range_hour="+timetotal
+        URL = "/json_svr/query/?u=10&c=380225&type=kline&symbol="+pairs+"&group_sec="+str(timeperiod)+"&range_hour="+str(timetotal)
         #print('self.__url='+self.__url)
         return httpGetKline('gate.io',URL,param)
 
