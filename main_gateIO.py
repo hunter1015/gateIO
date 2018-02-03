@@ -7,7 +7,7 @@
 #注释本行   startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW 
 #http://python.jobbole.com/87471/ 有个教程 还不错numpy和matplotlib
 #
-#
+#测试3
 
 import talib
 import numpy as np
